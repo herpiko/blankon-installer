@@ -245,17 +245,18 @@ public class Installation : GLib.Object {
     }
 
     void child_watch (Pid pid, int status) {
-        if (Process.if_exited (status) && Process.exit_status (status) == 0) {
-            if (Process.exit_status (status) == 0) {
+        if (Process.if_exited (status) && (Process.exit_status (status) == 0 || Process.exit_status (status) == 1 )) {
+            //if (Process.exit_status (status) == 0) {
                 Log.instance().log("Child " + ((int) pid).to_string () + " has finished it's task successfuly.");
                 last_step = step;
                 step = Step.IDLE;
-            } else {
+            // Lets assume 0 and 1 as successfull exit code
+            /*} else {
                 Log.instance().log("Child " + ((int) pid).to_string () + " has ended and return with " + Process.exit_status (status).to_string());
                 state = State.ERROR;
                 step = Step.DONE;
                 last_step = Step.DONE;
-            }
+            }*/
         } else {
             Log.instance().log("Child " + ((int) pid).to_string () + " has ended and failed.");
             state = State.ERROR;
