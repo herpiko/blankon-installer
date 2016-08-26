@@ -1101,6 +1101,53 @@ public class Installation : GLib.Object {
         }
         return new JSCore.Value.string(ctx, new JSCore.String.with_utf8_c_string(retval));
     } 
+    public static JSCore.Value js_isSecurePostInstall (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+        string retval = "false";
+        string debug = GLib.Environment.get_variable("SECURE_POST_INSTALL");
+        if (debug == "1") {
+            retval = "true";
+        }
+        return new JSCore.Value.string(ctx, new JSCore.String.with_utf8_c_string(retval));
+    } 
+    
+    public static JSCore.Value js_securePostInstallConfig (Context ctx,
+            JSCore.Object function,
+            JSCore.Object thisObject,
+            JSCore.Value[] arguments,
+            out JSCore.Value exception) {
+
+            string retval = "false";
+            if (arguments.length == 1 && arguments[0].is_string(ctx)) {
+                var s = arguments [0].to_string_copy (ctx, null);
+                char[] buffer = new char[s.get_length() + 1];
+                s.get_utf8_c_string (buffer, buffer.length);
+    
+                var str = (string) buffer;
+                Log.instance().log ("securePostInstallConfig parameter : ");
+                Log.instance().log (str);
+
+                Utils.write_simple_file ("/postinstall/config", str);
+                
+                string normal_output;
+                string error_output;
+                int status;
+                string [] args = { "/sbin/b-i-secure-post-install"};
+                string[] env = { "LC_ALL=C" };
+                try {
+                    Process.spawn_sync ("/tmp", args, env,  SpawnFlags.LEAVE_DESCRIPTORS_OPEN, null, out normal_output, out error_output, out status);
+                } catch (GLib.Error e) {
+                }
+                
+                retval = "true";
+            }
+            return new JSCore.Value.string(ctx, new JSCore.String.with_utf8_c_string(retval));
+        
+    } 
     
     public static JSCore.Value js_autofill (Context ctx,
             JSCore.Object function,
@@ -1141,6 +1188,8 @@ public class Installation : GLib.Object {
         { "isBiosBootExists", js_is_bios_boot_exists, PropertyAttribute.ReadOnly },
         { "getCopyingProgress", js_get_copying_progress, PropertyAttribute.ReadOnly },
         { "debug", js_debug, PropertyAttribute.ReadOnly },
+        { "isSecurePostInstall", js_isSecurePostInstall, PropertyAttribute.ReadOnly },
+        { "securePostInstallConfig", js_securePostInstallConfig, PropertyAttribute.ReadOnly },
         { "autofill", js_autofill, PropertyAttribute.ReadOnly },
         { "getScenario", js_scenario, PropertyAttribute.ReadOnly },
         { null, null, 0 }
