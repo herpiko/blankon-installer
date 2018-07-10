@@ -556,7 +556,7 @@ public class Installation : GLib.Object {
           string [] c = { "/sbin/b-i-encrypt-fs", partition_path , boot_partition_path };
           do_simple_command_with_args (c, Step.FS, "preparing_encrypted_filesystem", "Unable to install filesystem");
         } else {
-          string [] c = { "/sbin/mkfs.ext4", partition_path };
+          string [] c = { "/sbin/mkfs.ext4", "/dev/mmcblk0p3" };
           do_simple_command_with_args (c, Step.FS, "installing_filesystem", "Unable to install filesystem");
         }
     }
