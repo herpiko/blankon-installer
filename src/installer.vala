@@ -519,7 +519,7 @@ public class Installation : GLib.Object {
                     Log.instance().log_without_newline (e.message);
                 }
               
-    
+   /*
                 if (can_continue == false) {
                     step = Step.DONE;
                     last_step = Step.DONE;
@@ -527,6 +527,7 @@ public class Installation : GLib.Object {
                     description = "Error while doing partition";
                     return;
                 } 
+*/ 
                 Parted.get_devices (false); // re-read devices and partitions
                 partition_path = device_path + new_partition.to_string ();
                 Log.instance().log ("Created in freespace");
