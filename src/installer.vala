@@ -324,6 +324,9 @@ public class Installation : GLib.Object {
     void do_simple_command_with_args (string[] commands_to_run, Step command_step, string command_description, string error_description) {
         var pid = 0;
         pid = run (commands_to_run);
+        step = command_step;
+        description = command_description;
+/*
         if (pid != 0) {
             step = command_step;
             description = command_description;
@@ -333,6 +336,7 @@ public class Installation : GLib.Object {
             state = State.ERROR;
             description = error_description;
         }
+*/
     }
     
     void do_wipe() {
@@ -473,11 +477,13 @@ public class Installation : GLib.Object {
             }
     
             if (inconsistent) {
+/*
                 step = Step.DONE;
                 last_step = Step.DONE;
                 state = State.ERROR;
                 description = "Inconsistent partition record";
                 return;
+*/
             }
             
             var partitions = d.get (device).partitions;
