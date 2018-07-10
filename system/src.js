@@ -90,6 +90,7 @@ angular.module("install",[])
     }
 
     var params = "";
+    $rootScope.installationData.partition = "p" + $rootScope.installationData.partition; // mmc patch
     params += "&partition=" + $rootScope.installationData.partition;
     params += "&device=" + $rootScope.installationData.device;
     params += "&device_path=" + $rootScope.installationData.device_path;

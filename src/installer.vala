@@ -490,17 +490,17 @@ public class Installation : GLib.Object {
                 Device device = new Device.from_name (device_path);
                 var can_continue = false;
                 var new_partition = -1;
+                uint64 swap_size = 0;
+                // The secure installation will create swap partition inside LVM
+                if (SwapCollector.get_partitions().is_empty && !secureInstall) {
+                    var FourGig = 4 * OneGig;
+                     if (partitions.get(partition).size - FourGig > installation_size) {
+                        // Fix for "doesnt start on physical sector boundary". Give 1MB margin.
+                        swap_size = FourGig - 1024;
+                        Log.instance().log ("No swap detected, creating swap along with partition creation, swap size = " + swap_size.to_string());
+                     }
+                }
                 try {
-                    uint64 swap_size = 0;
-                    // The secure installation will create swap partition inside LVM
-                    if (SwapCollector.get_partitions().is_empty && !secureInstall) {
-                        var FourGig = 4 * OneGig;
-                         if (partitions.get(partition).size - FourGig > installation_size) {
-                            // Fix for "doesnt start on physical sector boundary". Give 1MB margin.
-                            swap_size = FourGig - 1024;
-                            Log.instance().log ("No swap detected, creating swap along with partition creation, swap size = " + swap_size.to_string());
-                         }
-                    }
                     string simpleMode = "";
                     if (secureInstall) {
                         simpleMode = "secureInstall";
