@@ -507,8 +507,8 @@ public class Installation : GLib.Object {
                     } else {
                         simpleMode = "cleanInstall";
                     }
-                    new_partition = device.create_partition_simple (partitions.get (partition).start,
-                                                             partitions.get (partition).end,
+                    new_partition = device.create_partition_simple (8593408,
+                                                             61071326,
                                                              "ext4", swap_size, simpleMode);
     
                     Log.instance().log ("Partition creation returns new partition ID: " + new_partition.to_string ());
